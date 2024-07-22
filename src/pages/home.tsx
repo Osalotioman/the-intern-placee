@@ -10,7 +10,6 @@ import { Bookmark } from "../components/Bookmark";
 import { Button } from "../components/ui/button";
 import {
 	Card,
-	CardContent,
 	CardDescription,
 	CardFooter,
 	CardHeader,
@@ -18,6 +17,7 @@ import {
 } from "../components/ui/card";
 import { InlinePaddingContainer } from "../components/ui/Container";
 import RootLayout from "./layout";
+import { JobDetailsBriefCard } from "../components/JobDetailsBriefCard";
 
 export default function Home() {
 	const [isHeaderOpen, setIsHeaderOpen] = useState(true);
@@ -146,41 +146,6 @@ export default function Home() {
 		</RootLayout>
 	);
 }
-
-// TODO: move to its own file
-const JobDetailsBriefCard = () => {
-	return (
-		<Card className="grow border-none">
-			<CardHeader className="flex-row items-center gap-x-3">
-				<div className="aspect-square w-12 rounded-lg overflow-hidden">
-					<img
-						className="w-full h-full object-cover"
-						src="/svgs/demo-logo.svg"
-						alt="demo logo"
-						width={150}
-						height={150}
-					/>
-				</div>
-				<div>
-					<CardTitle className="text-placeholder text-base">WorkOS</CardTitle>
-					<CardDescription className="text-base text-white">
-						Product Designer
-					</CardDescription>
-				</div>
-			</CardHeader>
-			<CardContent>
-				We're looking for experienced product designers who have experience
-				designing complex...
-			</CardContent>
-			<CardFooter className="flex justify-between gap-x-1.5">
-				<Button variant="outline" className="bg-transparent grow">
-					View
-				</Button>
-				<Bookmark isBookmarked={true} />
-			</CardFooter>
-		</Card>
-	);
-};
 
 // TODO: move to its own file
 const JobCard = () => {

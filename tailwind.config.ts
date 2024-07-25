@@ -65,6 +65,11 @@ const config = {
 				},
 				divider: {
 					md: "hsl(var(--divider-md) / <alpha-value>)",
+					dark: "hsl(var(--divider-dark) / <alpha-value>)",
+				},
+				block: {
+					light: "hsl(var(--block-light) / <alpha-value>)",
+					medium: "hsl(var(--block-medium) / <alpha-value>)",
 				},
 			},
 			borderRadius: {

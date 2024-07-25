@@ -43,6 +43,9 @@
 		--green-light: 97 59% 71%;
 		--blue-light: 215 83% 58%;
 		--divider-md: 0 0% 27%;
+		--divider-dark: 0 0% 17%;
+		--block-light: 0 0% 20%;
+		--block-medium: 0 0% 13%;
 	}
 
 	.dark {

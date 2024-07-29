@@ -1,4 +1,5 @@
 import { MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Bookmark } from "../components/Bookmark";
 import { Button } from "../components/ui/button";
 import {
@@ -134,8 +135,12 @@ export const JobDetailsBriefCard = () => {
 						</div>
 					</DialogDescription>
 					<DialogFooter className="p-0 px-4 pb-4">
-						<Button size={"lg"} className="w-full" variant={"secondary"}>
-							Open this position
+						<Button
+							size={"lg"}
+							className="w-full"
+							variant={"secondary"}
+							asChild>
+							<Link to="/jobs/12dddeax">Open this position</Link>
 						</Button>
 					</DialogFooter>
 				</DialogContent>

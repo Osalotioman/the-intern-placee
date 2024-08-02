@@ -28,3 +28,9 @@ export default {
 - Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
+## Using the repo locally.
+ 1. From your cli(terminal, cmd, git bash, powershell, etc) clone the repo to your device using `git clone https://github.com/GDSC-University-of-Benin/the-intern-placee.git`.
+ 2. Make sure you have node and npm installed and up to date.
+ 3. Run `npm install` in the root folder of the repository to handle dependencies.
+ 4. Run `npm run dev` in the root folder of the repo to start a localhost server from which you can access the project, the url to access the project from should be displayed in your terminal window.

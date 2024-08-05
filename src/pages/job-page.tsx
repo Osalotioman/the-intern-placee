@@ -1,4 +1,5 @@
 import { Briefcase, MapPin } from "lucide-react";
+import { PostJob } from "../components/PostJob";
 import { ProfileMatcher } from "../components/ProfileMatcher";
 import { SimilarJobCard } from "../components/SimilarJobCard";
 import { Badge } from "../components/ui/badge";
@@ -68,9 +69,13 @@ export default function JobPage() {
 									<Button variant={"secondary"} className="rounded-[10px]">
 										See all
 									</Button>
-									<Button variant={"secondary"} className="rounded-[10px]">
-										Post a job
-									</Button>
+									<PostJob
+										trigger={
+											<Button variant={"secondary"} className="rounded-[10px]">
+												Post a job
+											</Button>
+										}
+									/>
 								</div>
 							</div>
 							<article className="prose prose-headings:text-white">

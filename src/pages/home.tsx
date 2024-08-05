@@ -12,6 +12,7 @@ import {
 } from "../components/ui/card";
 import { InlinePaddingContainer } from "../components/ui/Container";
 import RootLayout from "./layout";
+import { PriceTag } from "../components/PriceTag";
 
 export default function Home() {
 	const [isHeaderOpen, setIsHeaderOpen] = useState(true);
@@ -124,9 +125,7 @@ const JobCard = () => {
 					</div>
 				</div>
 				<div className="flex items-center gap-x-2">
-					<div className="bg-green-light/[0.07] rounded-lg px-3 py-1.5">
-						<p className="text-green-light text-sm">1200 $</p>
-					</div>
+					<PriceTag price={1200} />
 					<Bookmark isBookmarked={false} />
 				</div>
 			</CardHeader>

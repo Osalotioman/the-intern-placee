@@ -47,16 +47,16 @@ CREATION OF JOB
 - user profile_picture
 - user about === comapny description
 
-- position
-- JD (rich text)
-// JOB ARRANGEMENT
-- Full time and part time
-- remote, hybrid, on-site(idk the label)
-
-- salary range
-- requirements
-- category
-- language
+- position/role
+- Full time, part time, contract(employment)
+- remote, hybrid, on-site(work model)
 - preferred location
+- language
+- currency
+- salary range (min, max). UI will show min-max
+- tags/category (e.g full time, onsite, competetive salary, etc) ... deliberating
+  react
+
+- JD (rich text)
+- requirements/skills
 - good to have (optional)
-- tags (e.g full time, onsite, competetive salary, etc) ... deliberating

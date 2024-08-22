@@ -15,35 +15,58 @@ import {
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
 	FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "./ui/select";
 
-const jobSchema = z.object({
-	username: z.string().min(2).max(50),
-	displayName: z.string().min(2).max(100),
-	whatYouDo: z.string(),
-	location: z.string(),
-	pronouns: z.string(),
-	website: z.string().url({message: 'Please enter a valid website url'}),
-	about: z.string(),
-});
+const EMPLOYMENT = ["Full time", "Part time", "Contract"] as const;
+const WORK_MODEL = ["Remote", "On site", "Hybrid"] as const;
+const CURRENCY = ["NGN"] as const;
+
+const jobSchema = z
+	.object({
+		position: z.string().min(1, "Position is required"),
+		employment: z.enum(EMPLOYMENT),
+		workModel: z.enum(WORK_MODEL),
+		location: z.string().min(1, "Location is required"),
+		salaryMin: z.number().nonnegative(),
+		salaryMax: z.number().nonnegative(),
+		currency: z.enum(CURRENCY),
+		// TODO: use an array for the tags
+		tags: z.string(),
+	})
+	.superRefine((args, ctx) => {
+		if (args.salaryMax < args.salaryMin) {
+			return ctx.addIssue({
+				message: "Maximum salary must be greater than minimum salary",
+				code: "custom",
+				path: ["salaryMax"],
+			});
+		}
+	});
 
 export function PostJob({ trigger }: { trigger: ReactNode }) {
 	const form = useForm<z.infer<typeof jobSchema>>({
 		resolver: zodResolver(jobSchema),
 		defaultValues: {
-			username: "",
-			displayName: '',
-			whatYouDo: '',
-			location: '',
-			pronouns: '',
-			website: '',
-			about: '',
+			position: "",
+			employment: "Full time",
+			workModel: "On site",
+			location: "",
+			salaryMax: 0,
+			salaryMin: 0,
+			currency: "NGN",
+			tags: "",
 		},
 	});
 
@@ -90,16 +113,117 @@ export function PostJob({ trigger }: { trigger: ReactNode }) {
 							</div>
 						</DialogHeader>
 						<DialogDescription className="p-4 space-y-6">
-							<div className="grid grid-cols-2 gap-4 items-center">
+							<FormField
+								control={form.control}
+								name="position"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Job Position</FormLabel>
+										<FormControl>
+											<Input {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="employment"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Job Employment</FormLabel>
+										<Select
+											onValueChange={field.onChange}
+											defaultValue={field.value}>
+											<FormControl>
+												<SelectTrigger>
+													<SelectValue placeholder="Select the kind of job employment" />
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												{EMPLOYMENT.map((employ) => (
+													<SelectItem value={employ} key={employ}>
+														{employ}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="workModel"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Work Model</FormLabel>
+										<Select
+											onValueChange={field.onChange}
+											defaultValue={field.value}>
+											<FormControl>
+												<SelectTrigger>
+													<SelectValue placeholder="Select the kind of work model for the job" />
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												{WORK_MODEL.map((work) => (
+													<SelectItem value={work} key={work}>
+														{work}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="location"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Job Location</FormLabel>
+										<FormControl>
+											<Input {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="currency"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Salary Currency</FormLabel>
+										<Select
+											onValueChange={field.onChange}
+											defaultValue={field.value}>
+											<FormControl>
+												<SelectTrigger>
+													<SelectValue placeholder="Select the currency for the salary" />
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												{CURRENCY.map((curr) => (
+													<SelectItem value={curr} key={curr}>
+														{curr}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<div className="grid grid-cols-2 gap-4">
 								<FormField
 									control={form.control}
-									name="username"
+									name="salaryMin"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Username</FormLabel>
-											<FormDescription>
-												This is your unique name.
-											</FormDescription>
+											<FormLabel>Salary Minimum Amount</FormLabel>
 											<FormControl>
 												<Input {...field} />
 											</FormControl>
@@ -109,13 +233,10 @@ export function PostJob({ trigger }: { trigger: ReactNode }) {
 								/>
 								<FormField
 									control={form.control}
-									name="displayName"
+									name="salaryMax"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Display name</FormLabel>
-											<FormDescription>
-												This is the name displayed on your profile.
-											</FormDescription>
+											<FormLabel>Salary Maximum Amount</FormLabel>
 											<FormControl>
 												<Input {...field} />
 											</FormControl>
@@ -126,76 +247,10 @@ export function PostJob({ trigger }: { trigger: ReactNode }) {
 							</div>
 							<FormField
 								control={form.control}
-								name="whatYouDo"
+								name="tags"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>What do you do?</FormLabel>
-										<FormDescription>Your occupation.</FormDescription>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="location"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Location</FormLabel>
-										<FormDescription>
-											This is where you are based.
-										</FormDescription>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="pronouns"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Pronouns</FormLabel>
-										<FormDescription>
-											This is what you want others to know you as. E.g she/her,
-											he/him etc
-										</FormDescription>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="website"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Website</FormLabel>
-										<FormDescription>
-											A link to your portfolio, blog or personal website.
-										</FormDescription>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="about"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>About</FormLabel>
-										<FormDescription>
-											A short bio about yourself
-										</FormDescription>
+										<FormLabel>Select tags for this job</FormLabel>
 										<FormControl>
 											<Input {...field} />
 										</FormControl>

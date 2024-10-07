@@ -2,7 +2,8 @@ const checkEnv = (env: string) => {
 	if (!import.meta.env[env]) {
 		throw new Error(`Environment variable ${env} is not set. Please set it.`);
 	}
-	return env;
+	
+	return import.meta.env[env];
 };
 
 const apiKey = checkEnv("VITE_FIREBASE_API_KEY");

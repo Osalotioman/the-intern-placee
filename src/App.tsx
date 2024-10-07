@@ -9,6 +9,7 @@ import JobPage from "./pages/job-page";
 import Signin from "./pages/signin";
 import Signup from "./pages/signup";
 
+
 const router = createBrowserRouter(
 	createRoutesFromElements(
 		<>

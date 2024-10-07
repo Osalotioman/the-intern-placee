@@ -1,10 +1,50 @@
-import { Button } from "../components/ui/button";
-import { Card } from "../components/ui/card";
-import { Input } from "../components/ui/input";
-import { Logo } from "../components/ui/logo";
-import { MyLink } from "../components/ui/link";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import {
+	Form,
+	FormControl,
+	FormDescription,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { MyLink } from "@/components/ui/link";
+import { Logo } from "@/components/ui/logo";
+import { signInWithEmailAndPassword } from "@/lib/api/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+const signInFormSchema = z.object({
+	email: z
+		.string({ required_error: "Your email is required" })
+		.email("Please enter a valid email address"),
+	password: z
+		.string()
+		.min(8, "Your password must be at least 8 characters long"),
+});
+
+type SignInForm = z.infer<typeof signInFormSchema>;
 
 export default function Signin() {
+	const form = useForm<SignInForm>({
+		resolver: zodResolver(signInFormSchema),
+		defaultValues: {
+			email: "",
+			password: "",
+		},
+	});
+
+	const signIn = async (data: SignInForm) => {
+		try {
+			await signInWithEmailAndPassword(data.email, data.password);
+		} catch (e) {
+			console.log(JSON.stringify(e));
+		}
+	};
+
 	return (
 		<div className="min-h-dvh flex items-center justify-center">
 			<Card className="max-w-lg w-full p-6 space-y-6">
@@ -32,32 +72,46 @@ export default function Signin() {
 					</div>
 				</div>
 				<div>
-					<form>
-						<div className="space-y-6">
-							<div className="space-y-3">
-								<label htmlFor="email" className="block font-medium text-">
-									Email address
-								</label>
-								<Input />
-							</div>
-							<div className="space-y-3">
-								<label htmlFor="password" className="block font-medium text-">
-									Password
-								</label>
-								<Input
-									type="password"
-									id="password"
-									name="password"
-									className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-accent focus:border-accent sm:text-sm"
+					<Form {...form}>
+						<form onSubmit={form.handleSubmit(signIn)}>
+							<div className="space-y-6">
+								<FormField
+									control={form.control}
+									name="email"
+									render={({ field }) => (
+										<FormItem className="space-y-3">
+											<FormLabel>Email address</FormLabel>
+											<FormControl>
+												<Input {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
 								/>
+								<FormField
+									control={form.control}
+									name="email"
+									render={({ field }) => (
+										<FormItem className="space-y-3">
+											<FormLabel>Password</FormLabel>
+											<FormDescription>
+												Your Password should be at least 8 characters in length.
+											</FormDescription>
+											<FormControl>
+												<Input {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<div className="pt-3">
+									<Button className="w-full bg-accent hover:bg-accent">
+										Sign in
+									</Button>
+								</div>
 							</div>
-							<div className="pt-3">
-								<Button className="w-full bg-accent hover:bg-accent">
-									Sign in
-								</Button>
-							</div>
-						</div>
-					</form>
+						</form>
+					</Form>
 					<div className="pt-4">
 						<p className="text-center text-sm">
 							New user? <MyLink to="/signup">Create an account</MyLink>

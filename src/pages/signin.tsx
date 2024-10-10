@@ -1,3 +1,4 @@
+import { FormError } from "@/components/FormError";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -13,8 +14,11 @@ import { Input } from "@/components/ui/input";
 import { MyLink } from "@/components/ui/link";
 import { Logo } from "@/components/ui/logo";
 import { signInWithEmailAndPassword } from "@/lib/api/auth";
+import { cn, getUserFriendlyError } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 const signInFormSchema = z.object({
@@ -29,6 +33,8 @@ const signInFormSchema = z.object({
 type SignInForm = z.infer<typeof signInFormSchema>;
 
 export default function Signin() {
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 	const form = useForm<SignInForm>({
 		resolver: zodResolver(signInFormSchema),
 		defaultValues: {
@@ -36,12 +42,18 @@ export default function Signin() {
 			password: "",
 		},
 	});
+	const navigate = useNavigate();
 
 	const signIn = async (data: SignInForm) => {
 		try {
+			setLoading(true);
 			await signInWithEmailAndPassword(data.email, data.password);
-		} catch (e) {
+			navigate("/");
+		} catch (e: any) {
 			console.log(JSON.stringify(e));
+			setError(getUserFriendlyError(e?.code));
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -90,7 +102,7 @@ export default function Signin() {
 								/>
 								<FormField
 									control={form.control}
-									name="email"
+									name="password"
 									render={({ field }) => (
 										<FormItem className="space-y-3">
 											<FormLabel>Password</FormLabel>
@@ -98,15 +110,26 @@ export default function Signin() {
 												Your Password should be at least 8 characters in length.
 											</FormDescription>
 											<FormControl>
-												<Input {...field} />
+												<Input {...field} type="password" />
 											</FormControl>
 											<FormMessage />
 										</FormItem>
 									)}
 								/>
+								{error && (
+									<FormError
+										error={error}
+										clearErrorCallback={() => setError(null)}
+									/>
+								)}
 								<div className="pt-3">
-									<Button className="w-full bg-accent hover:bg-accent">
-										Sign in
+									<Button className="w-full bg-accent hover:bg-accent relative">
+										<span className={cn(loading && "opacity-0")}>Sign in</span>
+										{loading && (
+											<p className="absolute inset-0 top-1/2 -translate-y-1/2">
+												Loading...
+											</p>
+										)}
 									</Button>
 								</div>
 							</div>

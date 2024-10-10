@@ -7,6 +7,10 @@ import {app} from '@/lib/api/config'
 
 const auth = getAuth(app);
 
+export async function getCurrentUser() {
+	return auth.currentUser
+}
+
 export async function signUpWithEmailAndPassword(
 	email: string,
 	password: string
@@ -20,3 +24,5 @@ export async function signInWithEmailAndPassword(
 ) {
 	return await firebaseSignInWithEmailAndPassword(auth, email, password);
 }
+
+export const signOut = auth.signOut()

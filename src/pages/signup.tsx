@@ -1,6 +1,8 @@
+import { FormError } from "@/components/FormError";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
+	Form,
 	FormControl,
 	FormDescription,
 	FormField,
@@ -12,8 +14,11 @@ import { Input } from "@/components/ui/input";
 import { MyLink } from "@/components/ui/link";
 import { Logo } from "@/components/ui/logo";
 import { signUpWithEmailAndPassword } from "@/lib/api/auth";
+import { cn, getUserFriendlyError } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, useForm } from "react-hook-form";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 const signUpFormSchema = z.object({
@@ -29,6 +34,8 @@ const signUpFormSchema = z.object({
 type SignUpForm = z.infer<typeof signUpFormSchema>;
 
 export default function Signup() {
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 	const form = useForm<SignUpForm>({
 		resolver: zodResolver(signUpFormSchema),
 		defaultValues: {
@@ -37,12 +44,18 @@ export default function Signup() {
 			password: "",
 		},
 	});
+	const navigate = useNavigate();
 
 	const signUp = async (data: SignUpForm) => {
 		try {
+			setLoading(true);
 			await signUpWithEmailAndPassword(data.email, data.password);
-		} catch (e) {
+			navigate("/");
+		} catch (e: any) {
 			console.log(JSON.stringify(e));
+			setError(getUserFriendlyError(e?.code));
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -104,7 +117,7 @@ export default function Signup() {
 								/>
 								<FormField
 									control={form.control}
-									name="email"
+									name="password"
 									render={({ field }) => (
 										<FormItem className="space-y-3">
 											<FormLabel>Password</FormLabel>
@@ -118,9 +131,22 @@ export default function Signup() {
 										</FormItem>
 									)}
 								/>
+								{error && (
+									<FormError
+										error={error}
+										clearErrorCallback={() => setError(null)}
+									/>
+								)}
 								<div className="pt-3">
-									<Button className="w-full bg-accent hover:bg-accent">
-										Create account
+									<Button className="w-full bg-accent hover:bg-accent relative">
+										<span className={cn(loading && "opacity-0")}>
+											Create account
+										</span>
+										{loading && (
+											<p className="absolute inset-0 top-1/2 -translate-y-1/2">
+												Loading...
+											</p>
+										)}
 									</Button>
 								</div>
 							</div>

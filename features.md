@@ -1,4 +1,4 @@
-CREATE AN ACCOUNT
+[X] CREATE AN ACCOUNT
 - email
 - password
 - name

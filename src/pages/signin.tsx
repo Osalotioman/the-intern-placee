@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { MyLink } from "@/components/ui/link";
 import { Logo } from "@/components/ui/logo";
 import { signInWithEmailAndPassword } from "@/lib/api/auth";
-import { cn, getUserFriendlyError } from "@/lib/utils";
+import { cn, getUserFriendlyError, isErrorInstance } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -49,9 +49,11 @@ export default function Signin() {
 			setLoading(true);
 			await signInWithEmailAndPassword(data.email, data.password);
 			navigate("/");
-		} catch (e: any) {
-			console.log(JSON.stringify(e));
-			setError(getUserFriendlyError(e?.code));
+		} catch (e: unknown) {
+			if (isErrorInstance(e)) {
+				console.log(e.code);
+				setError(getUserFriendlyError(e.code));
+			}
 		} finally {
 			setLoading(false);
 		}

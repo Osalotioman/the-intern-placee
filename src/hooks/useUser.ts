@@ -1,4 +1,5 @@
 import { getCurrentUser } from "@/lib/api/auth";
+import { isErrorInstance } from "@/lib/utils";
 import { User } from "firebase/auth";
 import { useEffect, useState } from "react";
 
@@ -10,8 +11,10 @@ export function useUser() {
 			try {
 				const currentUser = await getCurrentUser();
 				setUser(currentUser);
-			} catch (e: any) {
-				console.log("Couldn't get user");
+			} catch (e: unknown) {
+				if(isErrorInstance(e)) {
+					console.log(e.code);
+				}
 			}
 		};
 		getUser();

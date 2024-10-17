@@ -1,4 +1,4 @@
-import { ApplyJob } from "@/components/ApplyJob";
+import { ApplyToJob } from "@/components/ApplyToJob";
 import { PostJob } from "@/components/PostJob";
 import { ProfileMatcher } from "@/components/ProfileMatcher";
 import { SimilarJobCard } from "@/components/SimilarJobCard";
@@ -54,7 +54,7 @@ export default function JobPage() {
 								<Button variant={"secondary"} className="rounded-10">
 									Save
 								</Button>
-								<ApplyJob
+								<ApplyToJob
 									trigger={<Button className="rounded-10">Easy Apply</Button>}
 								/>
 							</div>

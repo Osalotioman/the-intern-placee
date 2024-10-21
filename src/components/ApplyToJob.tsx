@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { DialogTitle } from "@radix-ui/react-dialog";
 import { ComponentProps, ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -113,11 +114,7 @@ const jobSchema = z.object({
 	}),
 });
 
-function ApplyToJobTrigger({
-	children,
-}: {
-	children: ReactNode;
-}) {
+function ApplyToJobTrigger({ children }: { children: ReactNode }) {
 	return (
 		<DialogTrigger className="grow" asChild>
 			{children}
@@ -126,15 +123,19 @@ function ApplyToJobTrigger({
 }
 
 function ApplyToJobProvider({
-	handleDialogChange,
-	children
+	open,
+	onOpenChange,
+	children,
 }: {
-	handleDialogChange?: ComponentProps<typeof Dialog>["onOpenChange"];
-	children: ReactNode
+	open?: boolean;
+	onOpenChange?: ComponentProps<typeof Dialog>["onOpenChange"];
+	children: ReactNode;
 }) {
-	return <Dialog onOpenChange={handleDialogChange}>
-		{children}
-	</Dialog>;
+	return (
+		<Dialog open={open} onOpenChange={onOpenChange}>
+			{children}
+		</Dialog>
+	);
 }
 
 function ApplyToJobContent() {
@@ -160,269 +161,270 @@ function ApplyToJobContent() {
 	}
 
 	return (
-		
-			<DialogContent
-				className="p-8 border-divider-dark max-w-xl py-12"
-				hasCloseIcon={false}>
-				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)}>
-						<DialogHeader className="text-2xl mb-6">Apply to Job</DialogHeader>
-						<DialogDescription className="space-y-6">
-							<FormField
-								control={form.control}
-								name="name"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Name</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="email"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Email</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="location"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Where are you located?</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="phoneNumber"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Your Phone Number</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="age"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Age</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="about"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>
-											A short description about yourself (optional)
-										</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="socials.facebook"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Your facebook link (optional)</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="socials.linkedIn"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Your LinkedIn link (optional)</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="socials.x"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Your X/Twitter link (optional)</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="socials.github"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Your Github Link (optional)</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							{/* TODO: fix file upload */}
-							<FormField
-								control={form.control}
-								name="cv"
-								render={({ field: { onBlur, disabled, name, ref } }) => (
-									<FormItem>
-										<FormLabel>Your CV</FormLabel>
-										<FormControl>
-											<Input
-												type="file"
-												onChange={(e) => {
-													form.setValue(
-														"cv",
-														e.target.files && e.target.files[0]
-													);
-													form.clearErrors("cv");
-												}}
-												onBlur={onBlur}
-												disabled={disabled}
-												name={name}
-												ref={ref}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="coverLetter"
-								render={({ field: { onBlur, disabled, name, ref } }) => (
-									<FormItem>
-										<FormLabel>Your Cover Letter (optional)</FormLabel>
-										<FormControl>
-											<Input
-												type="file"
-												onChange={(e) => {
-													form.setValue(
-														"coverLetter",
-														e.target.files && e.target.files[0]
-													);
-													form.clearErrors("coverLetter");
-												}}
-												onBlur={onBlur}
-												disabled={disabled}
-												name={name}
-												ref={ref}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="skills"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>What skills do you have?</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="otherLinks.portfolio"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Your Portfolio Link (if any)</FormLabel>
-										<FormControl>
-											{/* TODO: change to the tags input once implemented */}
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="otherLinks.blog"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Your Blog Link (if any)</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-						</DialogDescription>
-						<DialogFooter className="p-0 pt-8">
-							<Button className="w-full">Apply</Button>
-							<Button className="w-full" variant={"secondary"} type="button">
-								Save to draft
-							</Button>
-						</DialogFooter>
-					</form>
-				</Form>
-			</DialogContent>
+		<DialogContent
+			className="p-8 border-divider-dark max-w-xl py-12"
+			hasCloseIcon={false}>
+			<Form {...form}>
+				<form onSubmit={form.handleSubmit(onSubmit)}>
+					<DialogHeader className="text-2xl mb-6">
+						<DialogTitle>Apply to Job</DialogTitle>
+					</DialogHeader>
+					<DialogDescription className="space-y-6">
+						<FormField
+							control={form.control}
+							name="name"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Name</FormLabel>
+									<FormControl>
+										<Input {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="email"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Email</FormLabel>
+									<FormControl>
+										<Input {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="location"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Where are you located?</FormLabel>
+									<FormControl>
+										<Input {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="phoneNumber"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Your Phone Number</FormLabel>
+									<FormControl>
+										<Input {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="age"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Age</FormLabel>
+									<FormControl>
+										<Input {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="about"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>
+										A short description about yourself (optional)
+									</FormLabel>
+									<FormControl>
+										<Input {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="socials.facebook"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Your facebook link (optional)</FormLabel>
+									<FormControl>
+										<Input {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="socials.linkedIn"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Your LinkedIn link (optional)</FormLabel>
+									<FormControl>
+										<Input {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="socials.x"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Your X/Twitter link (optional)</FormLabel>
+									<FormControl>
+										<Input {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="socials.github"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Your Github Link (optional)</FormLabel>
+									<FormControl>
+										<Input {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						{/* TODO: fix file upload */}
+						<FormField
+							control={form.control}
+							name="cv"
+							render={({ field: { onBlur, disabled, name, ref } }) => (
+								<FormItem>
+									<FormLabel>Your CV</FormLabel>
+									<FormControl>
+										<Input
+											type="file"
+											onChange={(e) => {
+												form.setValue(
+													"cv",
+													e.target.files && e.target.files[0]
+												);
+												form.clearErrors("cv");
+											}}
+											onBlur={onBlur}
+											disabled={disabled}
+											name={name}
+											ref={ref}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="coverLetter"
+							render={({ field: { onBlur, disabled, name, ref } }) => (
+								<FormItem>
+									<FormLabel>Your Cover Letter (optional)</FormLabel>
+									<FormControl>
+										<Input
+											type="file"
+											onChange={(e) => {
+												form.setValue(
+													"coverLetter",
+													e.target.files && e.target.files[0]
+												);
+												form.clearErrors("coverLetter");
+											}}
+											onBlur={onBlur}
+											disabled={disabled}
+											name={name}
+											ref={ref}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="skills"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>What skills do you have?</FormLabel>
+									<FormControl>
+										<Input {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="otherLinks.portfolio"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Your Portfolio Link (if any)</FormLabel>
+									<FormControl>
+										{/* TODO: change to the tags input once implemented */}
+										<Input {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="otherLinks.blog"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Your Blog Link (if any)</FormLabel>
+									<FormControl>
+										<Input {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+					</DialogDescription>
+					<DialogFooter className="p-0 pt-8">
+						<Button className="w-full">Apply</Button>
+						<Button className="w-full" variant={"secondary"} type="button">
+							Save to draft
+						</Button>
+					</DialogFooter>
+				</form>
+			</Form>
+		</DialogContent>
 	);
 }
 
 export function ApplyToJob({
 	trigger,
-	handleDialogChange,
+	open,
+	onOpenChange,
 }: {
 	trigger: ReactNode;
-	handleDialogChange?: ComponentProps<typeof Dialog>["onOpenChange"];
+	open?: boolean;
+	onOpenChange?: ComponentProps<typeof Dialog>["onOpenChange"];
 }) {
 	return (
-		<ApplyToJobProvider handleDialogChange={handleDialogChange}>
-			<ApplyToJobTrigger>
-				{trigger}
-			</ApplyToJobTrigger>
+		<ApplyToJobProvider open={open} onOpenChange={onOpenChange}>
+			<ApplyToJobTrigger>{trigger}</ApplyToJobTrigger>
 			<ApplyToJobContent />
 		</ApplyToJobProvider>
 	);
 }
 
-ApplyToJob.Provider = ApplyToJobProvider
-ApplyToJob.Trigger = ApplyToJobTrigger
-ApplyToJob.Content = ApplyToJobContent
+ApplyToJob.Provider = ApplyToJobProvider;
+ApplyToJob.Trigger = ApplyToJobTrigger;
+ApplyToJob.Content = ApplyToJobContent;

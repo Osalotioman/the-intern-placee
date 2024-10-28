@@ -29,6 +29,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "./ui/select";
+import { RichTextEditor } from "./ui/RichTextEditor";
 
 const EMPLOYMENT = ["Full time", "Part time", "Contract"] as const;
 const WORK_MODEL = ["Remote", "On site", "Hybrid"] as const;
@@ -68,7 +69,7 @@ const jobSchema = z
 	});
 
 export function PostJob({ trigger }: { trigger: ReactNode }) {
-	const [jobStep, setJobStep] = useState<"1" | "2">("1");
+	const [jobStep, setJobStep] = useState<"1" | "2">("2");
 	const form = useForm<z.infer<typeof jobSchema>>({
 		resolver: zodResolver(jobSchema),
 		defaultValues: {
@@ -105,39 +106,46 @@ export function PostJob({ trigger }: { trigger: ReactNode }) {
 						<span
 							className={cn("h-0.5 bg-white rounded-lg", {
 								"bg-white/60": jobStep !== "1",
+								// for when the step has been completed
+								// "bg-green-400": true,
 							})}></span>
 						<span
 							className={cn("rounded-full bg-white p-1.5 text-primary px-4", {
 								"bg-white/60 text-white/60": jobStep !== "1",
+								// "bg-green-400": true,
 							})}>
 							1
 						</span>
 						<span
 							className={cn("h-0.5 bg-white rounded-lg", {
 								"bg-white/60": jobStep !== "1",
+								// "bg-green-400": true,
 							})}></span>
 					</p>
 					<p className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
 						<span
 							className={cn("h-0.5 bg-white rounded-lg", {
 								"bg-white/60": jobStep !== "2",
+								// "bg-green-400": true,
 							})}></span>
 						<span
 							className={cn("rounded-full bg-white p-1.5 text-primary px-4", {
 								"bg-white/60 text-white/60": jobStep !== "2",
+								// "bg-green-400": true,
 							})}>
 							2
 						</span>
 						<span
 							className={cn("h-0.5 bg-white rounded-lg", {
 								"bg-white/60": jobStep !== "2",
+								// "bg-green-400": true,
 							})}></span>
 					</p>
 				</div>
 				<div>
 					{jobStep === "1" ? (
 						<Form {...form}>
-							<form onSubmit={form.handleSubmit(onSubmit)}>
+							<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
 								<DialogHeader className="space-y-[1.125rem]">
 									<div className="flex items-center gap-x-3">
 										<div className="relative">
@@ -328,7 +336,7 @@ export function PostJob({ trigger }: { trigger: ReactNode }) {
 										)}
 									/>
 								</DialogDescription>
-								<DialogFooter className="p-0 px-4 pb-4 pt-6">
+								<DialogFooter className="p-0 px-4 pb-4">
 									<Button className="w-full">Done</Button>
 									<Button
 										className="w-full"
@@ -340,7 +348,7 @@ export function PostJob({ trigger }: { trigger: ReactNode }) {
 							</form>
 						</Form>
 					) : (
-						<p>This is step 2 form</p>
+						<RichTextEditor />
 					)}
 				</div>
 			</DialogContent>

@@ -1,10 +1,10 @@
-// src/Tiptap.tsx
 import { EditorProvider, useCurrentEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
 import { Color } from "@tiptap/extension-color";
 import ListItem from "@tiptap/extension-list-item";
-import TextStyle from "@tiptap/extension-text-style";
+import TextStyle, { TextStyleOptions } from "@tiptap/extension-text-style";
+import { Bold, Italic, List, ListOrdered, Redo, Undo } from "lucide-react";
 
 const MenuBar = () => {
 	const { editor } = useCurrentEditor();
@@ -14,122 +14,81 @@ const MenuBar = () => {
 	}
 
 	return (
-		<div className="bg-white/10 text-white px-4 py-2">
-			<div className="flex items-center gap-2 flex-wrap [&_button]:p-1">
+		<div className="bg-background-main-400 text-white p-4">
+			<div className="flex items-center gap-2 flex-wrap [&_button]:p-1 hover:[&_button]:bg-background-main-300 hover:[&_button]:text-background-main [&_svg]:hover:[&_button]:stroke-background-main data-[active=true]:[&_button]:bg-background-main-300 data-[active=true]:[&_button]:text-background-main duration-150 transition-all">
 				<button
 					onClick={() => editor.chain().focus().toggleBold().run()}
 					disabled={!editor.can().chain().focus().toggleBold().run()}
-					className={editor.isActive("bold") ? "is-active" : ""}>
-					Bold
+					data-active={editor.isActive("bold")}>
+					<Bold size={20} />
 				</button>
 				<button
 					onClick={() => editor.chain().focus().toggleItalic().run()}
 					disabled={!editor.can().chain().focus().toggleItalic().run()}
-					className={editor.isActive("italic") ? "is-active" : ""}>
-					Italic
-				</button>
-				<button
-					onClick={() => editor.chain().focus().toggleStrike().run()}
-					disabled={!editor.can().chain().focus().toggleStrike().run()}
-					className={editor.isActive("strike") ? "is-active" : ""}>
-					Strike
-				</button>
-				<button
-					onClick={() => editor.chain().focus().setParagraph().run()}
-					className={editor.isActive("paragraph") ? "is-active" : ""}>
-					Paragraph
+					data-active={editor.isActive("italic")}>
+					<Italic size={20} />
 				</button>
 				<button
 					onClick={() =>
 						editor.chain().focus().toggleHeading({ level: 1 }).run()
 					}
-					className={
-						editor.isActive("heading", { level: 1 }) ? "is-active" : ""
-					}>
+					data-active={editor.isActive("heading", { level: 1 })}>
 					H1
 				</button>
 				<button
 					onClick={() =>
 						editor.chain().focus().toggleHeading({ level: 2 }).run()
 					}
-					className={
-						editor.isActive("heading", { level: 2 }) ? "is-active" : ""
-					}>
+					data-active={editor.isActive("heading", { level: 2 })}>
 					H2
 				</button>
 				<button
 					onClick={() =>
 						editor.chain().focus().toggleHeading({ level: 3 }).run()
 					}
-					className={
-						editor.isActive("heading", { level: 3 }) ? "is-active" : ""
-					}>
+					data-active={editor.isActive("heading", { level: 3 })}>
 					H3
 				</button>
 				<button
 					onClick={() =>
 						editor.chain().focus().toggleHeading({ level: 4 }).run()
 					}
-					className={
-						editor.isActive("heading", { level: 4 }) ? "is-active" : ""
-					}>
+					data-active={editor.isActive("heading", { level: 4 })}>
 					H4
 				</button>
 				<button
 					onClick={() =>
 						editor.chain().focus().toggleHeading({ level: 5 }).run()
 					}
-					className={
-						editor.isActive("heading", { level: 5 }) ? "is-active" : ""
-					}>
+					data-active={editor.isActive("heading", { level: 5 })}>
 					H5
 				</button>
 				<button
 					onClick={() =>
 						editor.chain().focus().toggleHeading({ level: 6 }).run()
 					}
-					className={
-						editor.isActive("heading", { level: 6 }) ? "is-active" : ""
-					}>
+					data-active={editor.isActive("heading", { level: 6 })}>
 					H6
 				</button>
 				<button
 					onClick={() => editor.chain().focus().toggleBulletList().run()}
-					className={editor.isActive("bulletList") ? "is-active" : ""}>
-					Bullet list
+					data-active={editor.isActive("bulletList")}>
+					<List size={20} />
 				</button>
 				<button
 					onClick={() => editor.chain().focus().toggleOrderedList().run()}
-					className={editor.isActive("orderedList") ? "is-active" : ""}>
-					Ordered list
-				</button>
-				<button
-					onClick={() => editor.chain().focus().toggleBlockquote().run()}
-					className={editor.isActive("blockquote") ? "is-active" : ""}>
-					Blockquote
-				</button>
-				<button
-					onClick={() => editor.chain().focus().setHorizontalRule().run()}>
-					Horizontal rule
+					data-active={editor.isActive("orderedList")}>
+					<ListOrdered size={20} />
 				</button>
 				<button
 					onClick={() => editor.chain().focus().undo().run()}
 					disabled={!editor.can().chain().focus().undo().run()}>
-					Undo
+					<Undo size={20} />
 				</button>
 				<button
 					onClick={() => editor.chain().focus().redo().run()}
 					disabled={!editor.can().chain().focus().redo().run()}>
-					Redo
-				</button>
-				<button
-					onClick={() => editor.chain().focus().setColor("#958DF1").run()}
-					className={
-						editor.isActive("textStyle", { color: "#958DF1" })
-							? "is-active"
-							: ""
-					}>
-					Make color Purple
+					<Redo size={20} />
 				</button>
 			</div>
 		</div>
@@ -138,7 +97,7 @@ const MenuBar = () => {
 
 const extensions = [
 	Color.configure({ types: [TextStyle.name, ListItem.name] }),
-	TextStyle.configure({ types: [ListItem.name] }),
+	TextStyle.configure({ types: [ListItem.name] } as Partial<TextStyleOptions>),
 	StarterKit.configure({
 		bulletList: {
 			keepMarks: true,
@@ -151,48 +110,17 @@ const extensions = [
 	}),
 ];
 
-const content = `
-<h2>
-  Hi there,
-</h2>
-<p>
-  this is a <em>basic</em> example of <strong>Tiptap</strong>. Sure, there are all kind of basic text styles you’d probably expect from a text editor. But wait until you see the lists:
-</p>
-<ul>
-  <li>
-    That’s a bullet list with one …
-  </li>
-  <li>
-    … or two list items.
-  </li>
-</ul>
-<p>
-  Isn’t that great? And all of that is editable. But wait, there’s more. Let’s try a code block:
-</p>
-<pre><code class="language-css">body {
-  display: none;
-}</code></pre>
-<p>
-  I know, I know, this is impressive. It’s only the tip of the iceberg though. Give it a try and click a little bit around. Don’t forget to check the other examples too.
-</p>
-<blockquote>
-  Wow, that’s amazing. Good work, boy! 👏
-  <br />
-  — Mom
-</blockquote>
-`;
-
 export const RichTextEditor = () => {
 	return (
 		<EditorProvider
 			editorProps={{
 				attributes: {
 					class:
-						"bg-white/10 border-t border-white/40 p-4 min-h-[504px] focus:outline-none",
+						"bg-background-main-400 border-t border-white p-4 min-h-[504px] focus:outline-none tiptap",
 				},
 			}}
 			slotBefore={<MenuBar />}
 			extensions={extensions}
-			content={content}></EditorProvider>
+			content={""}></EditorProvider>
 	);
 };

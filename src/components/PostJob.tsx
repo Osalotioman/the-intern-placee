@@ -22,6 +22,7 @@ import {
 	FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
+import { RichTextEditor } from "./ui/RichTextEditor";
 import {
 	Select,
 	SelectContent,
@@ -29,13 +30,12 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "./ui/select";
-import { RichTextEditor } from "./ui/RichTextEditor";
 
 const EMPLOYMENT = ["Full time", "Part time", "Contract"] as const;
 const WORK_MODEL = ["Remote", "On site", "Hybrid"] as const;
 const CURRENCY = ["NGN"] as const;
 
-const jobSchema = z
+const step1JobSchema = z
 	.object({
 		position: z.string().min(1, "Position is required"),
 		employment: z.enum(EMPLOYMENT),
@@ -67,11 +67,21 @@ const jobSchema = z
 			});
 		}
 	});
+const step2FormSchema = z.object({
+	jobPost: z
+		.string()
+		.min(300, "Your job post must have a minimum of 300 characters."),
+});
 
 export function PostJob({ trigger }: { trigger: ReactNode }) {
-	const [jobStep, setJobStep] = useState<"1" | "2">("2");
-	const form = useForm<z.infer<typeof jobSchema>>({
-		resolver: zodResolver(jobSchema),
+	const [jobStep, setJobStep] = useState<"1" | "2" | "done">("done");
+	// TEST STATE
+	// {
+	// 	currentStep: ,
+	// 	stepsDone: ['1', '2'],
+	// }
+	const form = useForm<z.infer<typeof step1JobSchema>>({
+		resolver: zodResolver(step1JobSchema),
 		defaultValues: {
 			position: "",
 			employment: "Full time",
@@ -84,13 +94,24 @@ export function PostJob({ trigger }: { trigger: ReactNode }) {
 			skills: "",
 		},
 	});
+	const step2Form = useForm<z.infer<typeof step2FormSchema>>({
+		resolver: zodResolver(step2FormSchema),
+		defaultValues: {
+			jobPost: "",
+		},
+	});
 
 	// 2. Define a submit handler.
-	function onSubmit(values: z.infer<typeof jobSchema>) {
+	function onSubmit(values: z.infer<typeof step1JobSchema>) {
 		// Do something with the form values.
 		// ✅ This will be type-safe and validated.
 		console.log(values);
 		setJobStep("2");
+	}
+
+	function step2OnSubmit(values: z.infer<typeof step2FormSchema>) {
+		console.log("Success", values);
+		setJobStep("done");
 	}
 
 	return (
@@ -143,9 +164,11 @@ export function PostJob({ trigger }: { trigger: ReactNode }) {
 					</p>
 				</div>
 				<div>
-					{jobStep === "1" ? (
+					{jobStep === "1" && (
 						<Form {...form}>
-							<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+							<form
+								onSubmit={form.handleSubmit(onSubmit)}
+								className="space-y-6">
 								<DialogHeader className="space-y-[1.125rem]">
 									<div className="flex items-center gap-x-3">
 										<div className="relative">
@@ -347,8 +370,44 @@ export function PostJob({ trigger }: { trigger: ReactNode }) {
 								</DialogFooter>
 							</form>
 						</Form>
-					) : (
-						<RichTextEditor />
+					)}{" "}
+					{jobStep === "2" && (
+						<Form {...step2Form}>
+							<form
+								onSubmit={step2Form.handleSubmit(step2OnSubmit)}
+								className="space-y-6">
+								<DialogDescription className="space-y-6">
+									<FormField
+										control={step2Form.control}
+										name="jobPost"
+										render={() => (
+											<FormItem>
+												<FormControl>
+													<RichTextEditor
+														setValue={(content) => {
+															console.log(content);
+															step2Form.setValue("jobPost", content);
+														}}
+													/>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</DialogDescription>
+								<DialogFooter className="p-0 px-4 pb-4">
+									<Button className="w-full">Create</Button>
+								</DialogFooter>
+							</form>
+						</Form>
+					)}
+					{jobStep === "done" && (
+						<div className="flex flex-col items-center justify-center gap-4">
+							<h2 className="text-xl font-semibold">
+								You have successfuly posted a job on our platform.{" "}
+							</h2>
+							<Button className="w-full max-w-xs">View Job Post</Button>
+						</div>
 					)}
 				</div>
 			</DialogContent>

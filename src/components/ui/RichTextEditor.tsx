@@ -1,18 +1,13 @@
-import { EditorProvider, useCurrentEditor } from "@tiptap/react";
+import { Editor, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { sanitize } from "isomorphic-dompurify";
 
 import { Color } from "@tiptap/extension-color";
 import ListItem from "@tiptap/extension-list-item";
 import TextStyle, { TextStyleOptions } from "@tiptap/extension-text-style";
 import { Bold, Italic, List, ListOrdered, Redo, Undo } from "lucide-react";
 
-const MenuBar = () => {
-	const { editor } = useCurrentEditor();
-
-	if (!editor) {
-		return null;
-	}
-
+const EditorMenuBar = ({ editor }: { editor: Editor }) => {
 	return (
 		<div className="bg-background-main-400 text-white p-4">
 			<div className="flex items-center gap-2 flex-wrap [&_button]:p-1 hover:[&_button]:bg-background-main-300 hover:[&_button]:text-background-main [&_svg]:hover:[&_button]:stroke-background-main data-[active=true]:[&_button]:bg-background-main-300 data-[active=true]:[&_button]:text-background-main duration-150 transition-all">
@@ -110,17 +105,34 @@ const extensions = [
 	}),
 ];
 
-export const RichTextEditor = () => {
+export const RichTextEditor = ({
+	content = "",
+	setValue,
+}: {
+	setValue: (content: string) => void;
+	content?: string;
+}) => {
+	const editor = useEditor({
+		editorProps: {
+			attributes: {
+				class:
+					"bg-background-main-400 border-t border-white p-4 min-h-[504px] focus:outline-none tiptap",
+			},
+		},
+		extensions,
+		content,
+		onUpdate(props) {
+			const sanitizedContent = sanitize(props.editor.getHTML());
+			setValue(sanitizedContent);
+		},
+	});
+
+	if (!editor) return null;
+
 	return (
-		<EditorProvider
-			editorProps={{
-				attributes: {
-					class:
-						"bg-background-main-400 border-t border-white p-4 min-h-[504px] focus:outline-none tiptap",
-				},
-			}}
-			slotBefore={<MenuBar />}
-			extensions={extensions}
-			content={""}></EditorProvider>
+		<div>
+			<EditorMenuBar editor={editor} />
+			<EditorContent editor={editor} />
+		</div>
 	);
 };

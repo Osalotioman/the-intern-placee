@@ -7,10 +7,26 @@ import { Button } from "@/components/ui/button";
 import { InlinePaddingContainer } from "@/components/ui/Container";
 import VerifyCheckIcon from "@/components/ui/verify-check";
 import { matchListData } from "@/data/profile";
+import { getJob } from "@/lib/api/db";
 import RootLayout from "@/pages/layout";
 import { Briefcase, MapPin } from "lucide-react";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 export default function JobPage() {
+	const { jobId } = useParams();
+
+	useEffect(() => {
+		const fetchJob = async () => {
+			if (!jobId) return;
+
+			const job = await getJob(jobId);
+			console.log(job);
+		};
+
+		fetchJob();
+	}, [jobId]);
+
 	return (
 		<RootLayout>
 			<section>

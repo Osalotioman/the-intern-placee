@@ -127,7 +127,7 @@ export default function Signup() {
 												Your Password should be at least 8 characters in length.
 											</FormDescription>
 											<FormControl>
-												<Input {...field} />
+												<Input type="password" {...field} />
 											</FormControl>
 											<FormMessage />
 										</FormItem>

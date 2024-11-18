@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { useUser } from "@/hooks/useUser";
+import { addJob } from "@/lib/api/db";
+import { cn, isErrorInstance } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Pencil } from "lucide-react";
 import { ReactNode, useState } from "react";
@@ -30,6 +32,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "./ui/select";
+import { Link } from "react-router-dom";
 
 const EMPLOYMENT = ["Full time", "Part time", "Contract"] as const;
 const WORK_MODEL = ["Remote", "On site", "Hybrid"] as const;
@@ -67,6 +70,7 @@ const step1JobSchema = z
 			});
 		}
 	});
+
 const step2FormSchema = z.object({
 	jobPost: z
 		.string()
@@ -74,7 +78,10 @@ const step2FormSchema = z.object({
 });
 
 export function PostJob({ trigger }: { trigger: ReactNode }) {
-	const [jobStep, setJobStep] = useState<"1" | "2" | "done">("done");
+	const [jobStep, setJobStep] = useState<"1" | "2" | "done">("1");
+	const [createdJobId, setCreatedJobId] = useState('');
+	const { user } = useUser();
+
 	// TEST STATE
 	// {
 	// 	currentStep: ,
@@ -101,6 +108,8 @@ export function PostJob({ trigger }: { trigger: ReactNode }) {
 		},
 	});
 
+	const isSubmitting = step2Form.formState.isSubmitting;
+
 	// 2. Define a submit handler.
 	function onSubmit(values: z.infer<typeof step1JobSchema>) {
 		// Do something with the form values.
@@ -109,9 +118,28 @@ export function PostJob({ trigger }: { trigger: ReactNode }) {
 		setJobStep("2");
 	}
 
-	function step2OnSubmit(values: z.infer<typeof step2FormSchema>) {
-		console.log("Success", values);
-		setJobStep("done");
+	async function step2OnSubmit(values: z.infer<typeof step2FormSchema>) {
+		if (!user) {
+			console.log("user not found");
+			return;
+		}
+
+		try {
+			const jobCreated = await addJob(
+				{
+					...form.getValues(),
+					jobDescription: values.jobPost,
+				},
+				user.uid
+			);
+			setJobStep('done');
+			setCreatedJobId(jobCreated.id);
+			console.log(jobCreated.id);
+		} catch (e) {
+			if (isErrorInstance(e)) {
+				console.log(e);
+			}
+		}
 	}
 
 	return (
@@ -360,7 +388,7 @@ export function PostJob({ trigger }: { trigger: ReactNode }) {
 									/>
 								</DialogDescription>
 								<DialogFooter className="p-0 px-4 pb-4">
-									<Button className="w-full">Done</Button>
+									<Button className="w-full">Continue</Button>
 									<Button
 										className="w-full"
 										variant={"secondary"}
@@ -370,7 +398,7 @@ export function PostJob({ trigger }: { trigger: ReactNode }) {
 								</DialogFooter>
 							</form>
 						</Form>
-					)}{" "}
+					)}
 					{jobStep === "2" && (
 						<Form {...step2Form}>
 							<form
@@ -396,17 +424,28 @@ export function PostJob({ trigger }: { trigger: ReactNode }) {
 									/>
 								</DialogDescription>
 								<DialogFooter className="p-0 px-4 pb-4">
-									<Button className="w-full">Create</Button>
+									<Button className="w-full">
+										{isSubmitting ? "Creating..." : "Create"}
+									</Button>
 								</DialogFooter>
 							</form>
 						</Form>
 					)}
 					{jobStep === "done" && (
 						<div className="flex flex-col items-center justify-center gap-4">
+							<div className="max-w-52 pb-3 mx-auto">
+								<img
+									src="/svgs/job-done.svg"
+									alt="Job post succesfully created"
+									width={300}
+									height={300}
+									className="w-full h-full object-cover"
+								/>
+							</div>
 							<h2 className="text-xl font-semibold">
 								You have successfuly posted a job on our platform.{" "}
 							</h2>
-							<Button className="w-full max-w-xs">View Job Post</Button>
+							<Link to={`/jobs/${createdJobId}`} className="w-full max-w-xs">View Job Post</Link>
 						</div>
 					)}
 				</div>

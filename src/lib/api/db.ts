@@ -16,6 +16,6 @@ export function addJob(job: JobData, creatorUserId: string) {
 }
 
 export async function getJob(jobId: string) {
-  const job = await getDoc(doc(db, DB_COLLECTIONS.JOBS, jobId));
-	return job.data();
+	const job = await getDoc(doc(db, DB_COLLECTIONS.JOBS, jobId));
+	return { id: job.id, ...(job.data() as JobData) };
 }

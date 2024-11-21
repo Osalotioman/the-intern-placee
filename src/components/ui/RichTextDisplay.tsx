@@ -1,4 +1,5 @@
 import { sanitize } from "isomorphic-dompurify";
+import { CSSProperties } from "react";
 
 export default function RichTextDisplay({ data }: { data: string }) {
 	const sanitizedData = sanitize(data);
@@ -6,7 +7,7 @@ export default function RichTextDisplay({ data }: { data: string }) {
 	return (
 		<div
 			dangerouslySetInnerHTML={{ __html: sanitizedData }}
-			style={{ "--tw-prose-bold": "text-[#AAAAAA]" }}
+			style={{ "--tw-prose-bold": "text-[#AAAAAA]" } as CSSProperties}
 		/>
 	);
 }

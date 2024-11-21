@@ -7,7 +7,7 @@ export default function RichTextDisplay({ data }: { data: string }) {
 	return (
 		<div
 			dangerouslySetInnerHTML={{ __html: sanitizedData }}
-			style={{ "--tw-prose-bold": "text-[#AAAAAA]" } as CSSProperties}
+			style={{ "--tw-prose-bold": "#AAAAAA" } as CSSProperties}
 		/>
 	);
 }

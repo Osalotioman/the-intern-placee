@@ -1,4 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { applyToJob } from "@/lib/api/db";
+import { cn, isErrorInstance } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { ComponentProps, ReactNode } from "react";
@@ -138,7 +140,7 @@ function ApplyToJobProvider({
 	);
 }
 
-function ApplyToJobContent() {
+function ApplyToJobContent({ jobId }: { jobId: string }) {
 	const form = useForm<z.infer<typeof jobSchema>>({
 		resolver: zodResolver(jobSchema),
 		defaultValues: {
@@ -155,9 +157,27 @@ function ApplyToJobContent() {
 			otherLinks: { portfolio: "", blog: "" },
 		},
 	});
+	const isSubmitting = form.formState.isSubmitting;
 
-	function onSubmit(values: z.infer<typeof jobSchema>) {
-		console.log(values);
+	async function onSubmit(values: z.infer<typeof jobSchema>) {
+		try {
+			// upload the cv and cover letter to our storage, get the id's from the result and save that in db
+			const { socials, otherLinks, coverLetter, cv, ...rest } = values;
+			const jobApplication = await applyToJob({
+				...rest,
+				...socials,
+				...otherLinks,
+				jobId,
+				applicantId: "x",
+				cv: cv.name,
+				coverLetter: coverLetter.name,
+			});
+			console.log(jobApplication);
+		} catch (e) {
+			if (isErrorInstance(e)) {
+				console.error(e);
+			}
+		}
 	}
 
 	return (
@@ -397,7 +417,20 @@ function ApplyToJobContent() {
 						/>
 					</DialogDescription>
 					<DialogFooter className="p-0 pt-8">
-						<Button className="w-full">Apply</Button>
+						<Button className="w-full">
+							<span
+								className={cn(
+									"text-background-main",
+									isSubmitting && "opacity-0"
+								)}>
+								Apply
+							</span>
+							{isSubmitting && (
+								<p className="text-background-main absolute inset-0 top-1/2 -translate-y-1/2">
+									Applying...
+								</p>
+							)}
+						</Button>
 						<Button className="w-full" variant={"secondary"} type="button">
 							Save to draft
 						</Button>
@@ -412,15 +445,16 @@ export function ApplyToJob({
 	trigger,
 	open,
 	onOpenChange,
+	jobId,
 }: {
 	trigger: ReactNode;
 	open?: boolean;
 	onOpenChange?: ComponentProps<typeof Dialog>["onOpenChange"];
-}) {
+} & ComponentProps<typeof ApplyToJobContent>) {
 	return (
 		<ApplyToJobProvider open={open} onOpenChange={onOpenChange}>
 			<ApplyToJobTrigger>{trigger}</ApplyToJobTrigger>
-			<ApplyToJobContent />
+			<ApplyToJobContent jobId={jobId} />
 		</ApplyToJobProvider>
 	);
 }

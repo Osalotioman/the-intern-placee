@@ -28,7 +28,7 @@ export default function JobPage() {
 			</div>
 		);
 
-	if (!jobDetails) {
+	if (!jobDetails || !jobId) {
 		return (
 			<RootLayout>
 				<InlinePaddingContainer>
@@ -103,6 +103,7 @@ export default function JobPage() {
 								</Button>
 								<ApplyToJob
 									trigger={<Button className="rounded-10">Easy Apply</Button>}
+									jobId={jobId}
 								/>
 							</div>
 						</div>

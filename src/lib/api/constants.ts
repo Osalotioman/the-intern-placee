@@ -5,4 +5,5 @@ export const FIREBASE_ERROR_MAPPER: { [k: string]: string } = {
 
 export const DB_COLLECTIONS = {
 	JOBS: "jobs",
+	JOB_APPLICATION: 'job-applications'
 };

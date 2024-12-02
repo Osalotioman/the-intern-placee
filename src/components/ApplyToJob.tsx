@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { applyToJob } from "@/lib/api/db";
+import { uploadFile } from "@/lib/api/storage";
 import { cn, isErrorInstance } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogTitle } from "@radix-ui/react-dialog";
@@ -163,6 +164,26 @@ function ApplyToJobContent({ jobId }: { jobId: string }) {
 		try {
 			// upload the cv and cover letter to our storage, get the id's from the result and save that in db
 			const { socials, otherLinks, coverLetter, cv, ...rest } = values;
+			// const { cv, coverLetter } = values;
+			const files: { filePath: string; file: File }[] = [];
+
+			if (cv) {
+				files.push({ filePath: `cv/${cv.name}`, file: cv });
+			}
+
+			if (coverLetter) {
+				files.push({
+					filePath: `cover_letter/${coverLetter.name}`,
+					file: coverLetter,
+				});
+			}
+
+			const filePromise = await Promise.all(
+				files.map((file) => uploadFile(file.filePath, file.file))
+			);
+			console.log(filePromise);
+			// await uploadCv(cv);
+
 			const jobApplication = await applyToJob({
 				...rest,
 				...socials,

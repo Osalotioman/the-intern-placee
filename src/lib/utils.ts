@@ -17,3 +17,7 @@ export function getUserFriendlyError(errorCode: string) {
 export function isErrorInstance(error: unknown) {
 	return error instanceof FirebaseError
 }
+
+export const sanitizeFileName = (fileName: string) => {
+	return fileName.replaceAll(" ", "-").toLowerCase();
+};

@@ -6,7 +6,7 @@ import { sanitizeFileName } from "../utils";
 const storage = getStorage(app, config.STORAGE_BUCKET_URL);
 
 export async function uploadFile(filePath: string, file: File) {
-	const fileRef = ref(storage, filePath);
+	const fileRef = ref(storage, sanitizeFileName(filePath));
 	return await uploadBytes(fileRef, file);
 }
 

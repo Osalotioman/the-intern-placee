@@ -171,29 +171,29 @@ function ApplyToJobContent({ jobId }: { jobId: string }) {
 				files.push({ filePath: `cv/${cv.name}`, file: cv });
 			}
 
-			if (coverLetter) {
+			if (coverLetter && coverLetter.size > 0) {
 				files.push({
 					filePath: `cover_letter/${coverLetter.name}`,
 					file: coverLetter,
 				});
 			}
 
-			const filePromise = await Promise.all(
+			const [uploadedCv, uploadedCoverLetter] = await Promise.all(
 				files.map((file) => uploadFile(file.filePath, file.file))
 			);
-			console.log(filePromise);
-			// await uploadCv(cv);
 
-			const jobApplication = await applyToJob({
+
+			await applyToJob({
 				...rest,
 				...socials,
 				...otherLinks,
 				jobId,
 				applicantId: "x",
-				cv: cv.name,
-				coverLetter: coverLetter.name,
+				cv: uploadedCv.metadata.fullPath,
+				coverLetter: uploadedCoverLetter
+					? uploadedCoverLetter.metadata.fullPath
+					: "",
 			});
-			console.log(jobApplication);
 		} catch (e) {
 			if (isErrorInstance(e)) {
 				console.error(e);

@@ -22,7 +22,7 @@ jobs:
           echo "VITE_FIREBASE_STORAGE_BUCKET=${{ secrets.FIREBASE_STORAGE_BUCKET }}" >> .env
           echo "VITE_FIREBASE_MESSAGING_ID=${{ secrets.FIREBASE_MESSAGING_ID }}" >> .env
           echo "VITE_FIREBASE_APP_ID=${{ secrets.FIREBASE_APP_ID }}" >> .env
-          echo "VITE_FIREBSE_MEASUREMENT_ID=${{ secrets.FIREBSE_MEASUREMENT_ID }}" >> .env
+          echo "VITE_FIREBASE_MEASUREMENT_ID=${{ secrets.FIREBASE_MEASUREMENT_ID }}" >> .env
           echo "VITE_FIREBASE_STORAGE_BUCKET_URL=${{ secrets.FIREBASE_STORAGE_BUCKET_URL }}" >> .env
       - name: Install deps and build
         run: npm ci && npm run build

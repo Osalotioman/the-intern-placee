@@ -21,8 +21,8 @@ This project and everyone participating in it is governed by the [Contributor Co
 
 If you find a bug, please open an issue [here](https://github.com/GDSC-University-of-Benin/the-intern-placee/issues) and include:
 - A clear and descriptive title.
-- A detailed description of the issue.
-- Steps to reproduce the issue.
+- A detailed description of the bug.
+- Steps to reproduce the bug.
 - Any relevant error messages or screenshots.
 
 ### Suggesting Enhancements
@@ -36,15 +36,14 @@ If you have an idea for an enhancement, please open an issue [here](https://gith
 
 1. Fork the repository.
 2. Create a new branch (`git checkout -b feature/my-new-feature`).
-3. Make your changes.
+3. Make your changes and stage then (`git add .` - to stage all changes).
 4. Commit your changes (`git commit -m 'Add some feature'`).
 5. Push to the branch (`git push origin feature/my-new-feature`).
 6. Open a pull request [here](https://github.com/GDSC-University-of-Benin/the-intern-placee/pulls).
 
 Please ensure your pull request adheres to the following guidelines:
-- The pull request should include tests for the change.
 - Follow the project's coding style.
-- If the pull request adds functionality, the documentation should be updated.
+- It should give a brief description of the issue it fixes and a link (possibly in form of a tag) to it.
 
 ## Development Setup
 
@@ -56,9 +55,9 @@ To set up your development environment, follow these steps:
     cd the-intern-placee
     ```
 
-2. Copy the .env.example file to .env:
+2. Copy the .env.example file to .env.local:
     ```sh
-    cp .env.example .env
+    cp .env.example .env.local
     ```
 
 3. Update the .env file with the required data.
@@ -70,9 +69,9 @@ To set up your development environment, follow these steps:
 
 5. Start the development server:
     ```sh
-    npm start
+    npm run dev
     ```
 
-6. Open your browser and navigate to `http://localhost:3000`.
+6. Open your browser and navigate to `http://localhost:5173`. (This might happen automatically depending on your setup)
 
 Thank you for contributing! 🙏

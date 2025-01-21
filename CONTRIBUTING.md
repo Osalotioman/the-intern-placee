@@ -36,7 +36,7 @@ If you have an idea for an enhancement, please open an issue [here](https://gith
 
 1. Fork the repository.
 2. Create a new branch (`git checkout -b feature/my-new-feature`).
-3. Make your changes and stage then (`git add .` - to stage all changes).
+3. Make your changes and stage them (`git add .` - to stage all changes).
 4. Commit your changes (`git commit -m 'Add some feature'`).
 5. Push to the branch (`git push origin feature/my-new-feature`).
 6. Open a pull request [here](https://github.com/GDSC-University-of-Benin/the-intern-placee/pulls).

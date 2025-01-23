@@ -3,7 +3,7 @@
 - password
 - name
 
-APPLY FOR A JOB
+[X] APPLY FOR A JOB
 **option to prefill the fields with the data from your profile**
 **default, don't use data from profile**
 // PERSONAL_INFO

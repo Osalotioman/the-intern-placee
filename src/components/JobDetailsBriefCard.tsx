@@ -160,7 +160,7 @@ export const JobDetailsBriefCard = () => {
 							className="w-full"
 							variant={"secondary"}
 							asChild>
-							<Link to="/jobs/12dddeax">Open this position</Link>
+							<Link to="/jobs/oyVBVlFAyRtuLIynEbGI">Open this position</Link>
 						</Button>
 					</DialogFooter>
 				</DialogContent>
@@ -170,7 +170,7 @@ export const JobDetailsBriefCard = () => {
 				onOpenChange={(open) =>
 					setOpenStatus(open ? "jobApplication" : "default")
 				}>
-				<ApplyToJob.Content />
+				<ApplyToJob.Content jobId="oyVBVlFAyRtuLIynEbGI" />
 			</ApplyToJob.Provider>
 		</Card>
 	);

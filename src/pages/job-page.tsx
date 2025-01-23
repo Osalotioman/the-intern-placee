@@ -5,12 +5,62 @@ import { SimilarJobCard } from "@/components/SimilarJobCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { InlinePaddingContainer } from "@/components/ui/Container";
+import RichTextDisplay from "@/components/ui/RichTextDisplay";
 import VerifyCheckIcon from "@/components/ui/verify-check";
 import { matchListData } from "@/data/profile";
+import useJobdetails from "@/hooks/useJobdetails";
 import RootLayout from "@/pages/layout";
 import { Briefcase, MapPin } from "lucide-react";
+import { useParams } from "react-router-dom";
 
 export default function JobPage() {
+	const { jobId } = useParams();
+	const { data: jobDetails, status } = useJobdetails(jobId);
+	const isLoading = status === "loading";
+	const isIdle = status === "idle";
+
+	if (isIdle) return null;
+
+	if (isLoading)
+		return (
+			<div className="min-h-dvh flex items-center justify-center">
+				Loading...
+			</div>
+		);
+
+	if (!jobDetails || !jobId) {
+		return (
+			<RootLayout>
+				<InlinePaddingContainer>
+					<div className="min-h-dvh flex items-center justify-center">
+						No job details found.
+					</div>
+				</InlinePaddingContainer>
+			</RootLayout>
+		);
+	}
+
+	const {
+		location,
+		position,
+		skills,
+		tags,
+		jobDescription,
+		employment,
+		workModel,
+		currency,
+		salaryMin,
+		salaryMax,
+	} = jobDetails;
+	
+	const tagsWithSkills = [
+		employment,
+		workModel,
+		`${currency} ${salaryMin} - ${salaryMax}`,
+		...skills.split(","),
+		...tags.split(","),
+	];
+
 	return (
 		<RootLayout>
 			<section>
@@ -19,7 +69,7 @@ export default function JobPage() {
 						<MapPin size={32} className="stroke-blue-light" />
 						<p className="inline-flex flex-col">
 							<span className="text-blue-light">Location</span>
-							<span className="text-white">Atlanta, Alpharetta, or remote</span>
+							<span className="text-white">{location}</span>
 						</p>
 					</div>
 					<div className="space-y-5">
@@ -37,16 +87,14 @@ export default function JobPage() {
 								<span className="text-placeholder text-sm inline-flex gap-x-2 items-center">
 									WorkOS <VerifyCheckIcon size={18} />
 								</span>
-								<span className="block text-base text-white">
-									Product Designer
-								</span>
+								<span className="block text-base text-white">{position}</span>
 							</p>
 						</div>
 						<div className="flex justify-between items-center gap-x-4 w-full">
 							<div className="flex flex-wrap gap-2">
-								{Array.from({ length: 12 }).map((_, i) => (
-									<Badge key={i} className="min-w-fit">
-										Badge {i + 1}
+								{tagsWithSkills.map((item, i) => (
+									<Badge key={`${item}-${i}`} className="min-w-fit">
+										{item}
 									</Badge>
 								))}
 							</div>
@@ -56,6 +104,7 @@ export default function JobPage() {
 								</Button>
 								<ApplyToJob
 									trigger={<Button className="rounded-10">Easy Apply</Button>}
+									jobId={jobId}
 								/>
 							</div>
 						</div>
@@ -82,68 +131,7 @@ export default function JobPage() {
 								</div>
 							</div>
 							<article className="prose prose-headings:text-white">
-								<p>
-									At Doss we're building tools for teams that work in the Real
-									World. Our Adaptive Resource Platform (ARP) is a
-									re-imagination of the system-of-record tools that power
-									today's physical economy.
-								</p>
-								<p>
-									Our vision is to build software that Gives Operators
-									Superpower - we just need your help executing the Doss ARP
-									into existence.
-								</p>
-								<h3>What you'll do</h3>
-								<ul>
-									<li>
-										Own UI/UX and product design lifecycle of our core product
-										(many screens!)
-									</li>
-									<li>
-										Architect a simple design system that helps Product +
-										Engineering + spin-up new features and experiences rapidly
-									</li>
-									<li>
-										Ship collateral for us to use in demo environments and
-										go-to-market functions
-									</li>
-									<li>
-										Collaborate across Product, Engineering, Sales, to reconcile
-										business and product objectives into designs
-									</li>
-								</ul>
-								<h3>What you're good at</h3>
-								<ul>
-									<li>
-										Extensive experience designing for large-scale web apps
-									</li>
-									<li>Moving really fast in Figma</li>
-									<li>Using the fundamentals of HTML, CSS, JavaScript</li>
-									<li>
-										Working with Frontend Engineers to make sure what&apos;s in
-										the design is exactly what ends up in the browser
-									</li>
-									<li>Starting from zero</li>
-								</ul>
-								<h3>About you</h3>
-								<ul>
-									<li>
-										Team player: you bring positivity, openness, and curiosity
-										to the team every day
-									</li>
-									<li>
-										Growth mindset: everything is an opportunity to learn and
-										improve yourself, the team, and the company
-									</li>
-									<li>
-										Craftsmanship: if something is off by 1px you know and you
-										will fix it
-									</li>
-									<li>
-										Scrappy: taking the fastest path to the best answer is
-										habitual
-									</li>
-								</ul>
+								<RichTextDisplay data={jobDescription} />
 							</article>
 						</div>
 						<div className="py-5 space-y-6">

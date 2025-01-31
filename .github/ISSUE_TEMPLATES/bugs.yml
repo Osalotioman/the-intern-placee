@@ -1,0 +1,23 @@
+name: Bug Report
+description: I would like to report a bug
+title: "Bug Report"
+labels: [bug report]
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Bug
+      placeholder: Insert a short title for the bug report here
+    validations:
+      required: true
+  - type: textarea
+    id: Additional
+    attributes:
+      label: Additional Context 
+      description: Details about the bug, how it was first encountered, steps that can be taken to reproduce the bug
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        If you feel this bug report template is lacking, you can also create a feature request issue [here](https://github.com/GDSC-University-of-Benin/the-intern-placee/issues) on suggested improvements

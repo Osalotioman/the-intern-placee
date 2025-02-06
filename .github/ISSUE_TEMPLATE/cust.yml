@@ -1,6 +1,6 @@
 name: "General Issue"
 description: Create a new ticket for issues not covered by other templates.
-title: "[ISSUE] - <title>"
+title: "[ISSUE] "
 labels: [
   "question",
   "help wanted"

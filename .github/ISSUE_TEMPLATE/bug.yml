@@ -3,7 +3,7 @@ description: Create a new ticket for a bug.
 title: "[BUG] "
 labels: [
   "bug",
-  "created-with-issues-template"
+  "issues-template"
 ]
 body:
   - type: textarea

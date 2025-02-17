@@ -1,0 +1,63 @@
+name: Clean New Issue Body
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  edit-issue-body:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Clean issue body
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { data: issue } = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            let newBody1 = issue.body;
+
+            if(issue.labels.some(label => label.name === "issues-template")){               
+                let newBody = issue.body.split('\n');
+                newBody1 = "";
+
+                for(let i=0; i<newBody.length; ++i){
+                    if(newBody[i].includes("### Screenshots") && i+5<newBody.length){
+                        if(newBody.slice(i, i+6).join('').replace(/\s+/g, '') === "###Screenshots```bash```"){
+                            newBody.splice(i, 6, ...Array(6).fill(""));
+                        }
+                    }
+                    if(newBody[i].includes("### Logs") && i+5<newBody.length){
+                        if(newBody.slice(i, i+6).join('').replace(/\s+/g, '') === "###Logs```bash```"){
+                            newBody.splice(i, 6, ...Array(6).fill(""));
+                        }
+                    }
+                    if(newBody[i].includes("### Browsers") && i+3<newBody.length){
+                        if(newBody.slice(i, i+4).join('').replace(/\s+/g, '') === "###Browsers_Noresponse_"){
+                            newBody.splice(i, 4, ...Array(4).fill(""));
+                        }
+                    }
+                    if(newBody[i].includes("### OS") && i+2<newBody.length){
+                        if(newBody.slice(i, i+3).join('').replace(/\s+/g, '') === "###OS_Noresponse_"){
+                            newBody.splice(i, 3, ...Array(3).fill(""));
+                        }
+                    }
+                    if(newBody[i] != ""){
+                        newBody1 += newBody[i] + '\n';
+                    }
+                }
+            }
+
+            await github.rest.issues.update({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+            body: newBody1,
+            });

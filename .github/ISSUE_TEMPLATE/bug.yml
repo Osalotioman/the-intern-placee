@@ -2,7 +2,8 @@ name: "Bug Report"
 description: Create a new ticket for a bug.
 title: "[BUG] "
 labels: [
-  "bug"
+  "bug",
+  "created-with-issues-template"
 ]
 body:
   - type: textarea

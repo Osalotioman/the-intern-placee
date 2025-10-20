@@ -1,4 +1,4 @@
-name: Typecheck on push to main and dev
+name: CI: Lint, Typecheck, Build
 
 on:
   push:
@@ -9,17 +9,44 @@ on:
     branches:
       - main
       - dev
+  workflow_dispatch:
 
 jobs:
-  typecheck:
+  ci:
     runs-on: ubuntu-latest
+    concurrency:
+      group: ci-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js 16.x
-        uses: actions/setup-node@v2
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 16.x
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Create env file (dummy values for build)
+        run: |
+          cat <<EOF > .env
+          VITE_FIREBASE_API_KEY=dummy
+          VITE_FIREBASE_AUTH_DOMAIN=dummy
+          VITE_FIREBASE_PROJECT_ID=dummy
+          VITE_FIREBASE_STORAGE_BUCKET=dummy
+          VITE_FIREBASE_STORAGE_BUCKET_URL=https://dummy.example.com
+          VITE_FIREBASE_MESSAGING_ID=dummy
+          VITE_FIREBASE_APP_ID=dummy
+          VITE_FIREBASE_MEASUREMENT_ID=dummy
+          EOF
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+      - name: Lint
+        run: npm run lint
       - name: Typecheck
         run: npm run typecheck
+      - name: Build
+        run: npm run build
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist

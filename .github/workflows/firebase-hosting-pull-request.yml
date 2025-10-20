@@ -13,6 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
       - name: Create env file
         run: |
           touch .env
@@ -24,8 +29,10 @@ jobs:
           echo "VITE_FIREBASE_APP_ID=${{ secrets.FIREBASE_APP_ID }}" >> .env
           echo "VITE_FIREBASE_MEASUREMENT_ID=${{ secrets.FIREBASE_MEASUREMENT_ID }}" >> .env
           echo "VITE_FIREBASE_STORAGE_BUCKET_URL=${{ secrets.FIREBASE_STORAGE_BUCKET_URL }}" >> .env
-      - name: Install deps and build
-        run: npm ci && npm run build
+      - name: Install deps
+        run: npm ci
+      - name: Build
+        run: npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         name: deploy to firebase hosting
         with:

@@ -1,4 +1,4 @@
-name: CI: Lint, Typecheck, Build
+name: "CI: Lint, Typecheck, Build"
 
 on:
   push:

@@ -14,26 +14,18 @@ body:
     validations:
       required: true
   - type: textarea
-    id: motivation
+    id: acceptance_criteria
     attributes:
-      label: "Motivation"
-      description: Please explain why this feature is important and how it will benefit the project.
-      placeholder: Explanation of the motivation behind this feature request...
+      label: "Acceptance Criteria"
+      description: Please provide the list of criterions for completing the issue.
+      placeholder: 
     validations:
       required: true
   - type: textarea
-    id: alternatives
+    id: size
     attributes:
-      label: "Alternatives"
-      description: Please describe any alternative solutions or features you've considered.
+      label: "Size"
+      description: The estimated time it will take to complete the issue.
       placeholder: Description of alternative solutions...
-    validations:
-      required: false
-  - type: textarea
-    id: additional_context
-    attributes:
-      label: "Additional Context"
-      description: Add any other context or screenshots about the feature request here.
-      placeholder: Additional context or screenshots...
     validations:
       required: false

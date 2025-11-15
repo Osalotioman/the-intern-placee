@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "gdsc-intern-place",
+    "site": "the-intern-place",
     "public": "dist",
     "ignore": [
       "firebase.json",

@@ -102,14 +102,10 @@ const TagInput = forwardRef<HTMLInputElement, TagInputProps>(
     const [inputValue, setInputValue] = useState<string>("");
 
     useEffect(() => {
-      // Only update tags if defaultValue changes
-      if (
-        Array.isArray(defaultValue) &&
-        JSON.stringify(defaultValue) !== JSON.stringify(tags)
-      ) {
+      if (Array.isArray(defaultValue)) {
         setTags(defaultValue);
       }
-    }, [defaultValue, tags]);
+    }, [defaultValue]);
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Enter" || e.key === ",") {
@@ -156,7 +152,11 @@ const TagInput = forwardRef<HTMLInputElement, TagInputProps>(
                 )}
               >
                 {tag}
-                <button type="button" onClick={() => removeTag(tag)}>
+                <button
+                  type="button"
+                  onClick={() => removeTag(tag)}
+                  aria-label={`Remove ${tag}`}
+                >
                   <X size={16} />
                 </button>
               </li>

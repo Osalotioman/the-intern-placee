@@ -46,7 +46,8 @@ export default function Home() {
 								onClick={() => setIsHeaderOpen(false)}
 								className="absolute right-5 top-5 px-2"
 								size={"sm"}
-								variant={"secondary"}>
+								variant={"secondary"}
+								aria-label="Dismiss welcome banner">
 								<X />
 							</Button>
 						</InlinePaddingContainer>

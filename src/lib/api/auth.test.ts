@@ -1,3 +1,4 @@
+import type { User, UserCredential } from "firebase/auth";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const {
@@ -48,7 +49,7 @@ describe("lib/api/auth", () => {
 	it("registers auth state changes and forwards the user", async () => {
 		const listener = vi.fn();
 		mockOnAuthStateChanged.mockImplementation((_auth, cb) => {
-			cb({ uid: "user-1" } as any);
+			cb({ uid: "user-1" } as unknown as User);
 			return () => {};
 		});
 
@@ -62,7 +63,8 @@ describe("lib/api/auth", () => {
 	});
 
 	it("creates an account with the firebase auth instance", async () => {
-		mockCreateUserWithEmailAndPassword.mockResolvedValueOnce({} as any);
+		const credential = { user: { uid: "user-2" } } as unknown as UserCredential;
+		mockCreateUserWithEmailAndPassword.mockResolvedValueOnce(credential);
 
 		await signUpWithEmailAndPassword("hello@example.com", "pass1234");
 
@@ -74,7 +76,8 @@ describe("lib/api/auth", () => {
 	});
 
 	it("signs in with email and password", async () => {
-		mockSignInWithEmailAndPassword.mockResolvedValueOnce({} as any);
+		const credential = { user: { uid: "user-3" } } as unknown as UserCredential;
+		mockSignInWithEmailAndPassword.mockResolvedValueOnce(credential);
 
 		await signIn("user@example.com", "pass");
 

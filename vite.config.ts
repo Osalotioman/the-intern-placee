@@ -1,16 +1,14 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import react from "@vitejs/plugin-react-swc";
-import reactBabel from "@vitejs/plugin-react";
+import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vite";
 
-const isVitest = process.env.VITEST === "true";
 const rootDir = fileURLToPath(new URL(".", import.meta.url));
 
 export default defineConfig({
-	plugins: [isVitest ? reactBabel() : react(), tsconfigPaths()],
+	plugins: [react(), tsconfigPaths()],
 	test: {
 		globals: true,
 		environment: "jsdom",

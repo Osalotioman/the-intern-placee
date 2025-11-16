@@ -1,3 +1,6 @@
+# The Intern Place
+[Link to Designs](https://www.figma.com/design/h1mxe6S0GdAggmiYLLovN2/TheInternPlace?node-id=0-1&p=f&t=PgKbDKcXpTSxPy7e-0)
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

@@ -1,5 +1,5 @@
 # The Intern Place
-[Link to Designs](https://www.figma.com/design/h1mxe6S0GdAggmiYLLovN2/TheInternPlace?node-id=0-1&p=f&t=PgKbDKcXpTSxPy7e-0)
+[Link to Designs](https://www.figma.com/design/6a5eDPa5KTHv3lZJHQIAeO/TheInternPlaceDesign?node-id=0-1&t=Oz5AqxEGqXSK82KK-1)
 
 # React + TypeScript + Vite
 
